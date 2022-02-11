@@ -19,9 +19,8 @@ function inputStart(handlerMeterName, finishactionIndex, defaultValue, arg1)
 
         local miposX = handler:GetX() + SKIN:GetX()
         local miposY = handler:GetY() + SKIN:GetY()
-        local miposaX = '0'
-        local miposaY = '0'
-        print("MI.XY: ".. miposX ..'|'.. miposY)
+        local midimW = handler:GetW()
+        local midimH = handler:GetH()
 
         -- ------------------------- writing and activating ------------------------- --
         local function tablelength(T)
@@ -31,7 +30,7 @@ function inputStart(handlerMeterName, finishactionIndex, defaultValue, arg1)
         end
 
         local bang = ''
-        local optionsList = {'StringAlign', 'FontFace', 'FontSize', 'AntiAlias', 'FontColor'}
+        local optionsList = {'StringAlign', 'FontFace', 'FontSize', 'AntiAlias', 'FontColor', 'ClipString'}
         for i = 1, tablelength(optionsList) do
             local optionValue = SELF:GetOption(optionsList[i])
             if optionValue ~= nil and optionValue ~= '' then
@@ -39,11 +38,45 @@ function inputStart(handlerMeterName, finishactionIndex, defaultValue, arg1)
             end
         end
 
+        local MeterX = 0
+        local MeterY = 0
+        local miposaX = '0'
+        local miposaY = '0'
+        local StringAlign = SELF:GetOption('StringAlign')
+        if StringAlign == 'LeftCenter' then
+            MeterY = midimH / 2
+        elseif StringAlign == 'LeftBottom' then
+            MeterY = midimH
+        elseif StringAlign == 'Center' or StringAlign == 'CenterTop' then
+            MeterX = midimW / 2
+        elseif StringAlign == 'CenterCenter' then
+            MeterX = midimW / 2
+            MeterY = midimH / 2
+            -- miposaX = '50%'
+            -- miposaY = '50%'
+        elseif StringAlign == 'CenterBottom' then
+            MeterX = midimW / 2
+            MeterY = midimH
+        elseif StringAlign == 'Right' or StringAlign == 'RightTop' then
+            MeterX = midimW
+        elseif StringAlign == 'RightCenter' then
+            MeterX = midimW
+            MeterY = midimH / 2
+        elseif StringAlign == 'RightBottom' then
+            MeterX = midimW
+            MeterY = midimH
+        end
+
+        print(StringAlign, MeterX, MeterY)
+
+
         bang = bang .. '[!WriteKeyValue Variables Sec.OriginConfigName "'..SKIN:GetVariable('CURRENTCONFIG')..'" "'..writeLocation..'"]'
         bang = bang .. '[!WriteKeyValue Variables Sec.X "'..miposX..'" "'..writeLocation..'"]'
         bang = bang .. '[!WriteKeyValue Variables Sec.Y "'..miposY..'" "'..writeLocation..'"]'
-        bang = bang .. '[!WriteKeyValue Variables Sec.W "'..handler:GetW()..'" "'..writeLocation..'"]'
-        bang = bang .. '[!WriteKeyValue Variables Sec.H "'..handler:GetH()..'" "'..writeLocation..'"]'
+        bang = bang .. '[!WriteKeyValue Variables Sec.W "'..midimW..'" "'..writeLocation..'"]'
+        bang = bang .. '[!WriteKeyValue Variables Sec.H "'..midimH..'" "'..writeLocation..'"]'
+        bang = bang .. '[!WriteKeyValue MIString X "'..MeterX..'" "'..writeLocation..'"]'
+        bang = bang .. '[!WriteKeyValue MIString Y "'..MeterY..'" "'..writeLocation..'"]'
         bang = bang .. '[!WriteKeyValue Variables Sec.Text "'.._G["defaultValue"]..'" "'..writeLocation..'"]'
 
         bang = bang .. '[!WriteKeyValue Rainmeter OnRefreshAction """[!Delay 100][!SetWindowPosition '..miposX..' '..miposY..' '..miposaX..' '..miposaY..'][!Show][!CommandMeasure InputHandler "Initiate()"]""" "'..writeLocation..'"]'
