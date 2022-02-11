@@ -56,7 +56,7 @@ function inputEnd(input, reset)
     if started == 1 then
         started = 0
         local CancelOnUnfocus = SELF:GetOption('CancelOnUnfocus')
-        if reset then input = _G["defaultValue"] end
+        if reset and CancelOnUnfocus == '1' then input = _G["defaultValue"] end
         print(input)
         local bang = ''
         bang = bang .. _G["finishAction"]:gsub('%$MI%.value%$', input)
